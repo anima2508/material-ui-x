@@ -232,7 +232,7 @@ This is a built-in feature of the rendering engine and greatly improves renderin
 
 _unlimited\*: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
-### Row virtualization [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+### Row virtualization [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 Row virtualization is the insertion and removal of rows as the grid scrolls vertically.
 
@@ -256,17 +256,12 @@ You can disable column virtualization by setting the column buffer to a higher n
 
 ## Components prop
 
-As part of the customization API, the grid allows you to replace and override nested components with the `components` prop. The prop accepts an object with the following keys:
+As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
+The prop accepts an object of type [GridSlotsComponent](/api/data-grid/#slots) .
 
-- `header`: The component rendered above the column header bar.
-- `loadingOverlay`: The component rendered when the loading react prop is set to true.
-- `noRowsOverlay`: The component rendered when the rows react prop is empty or [].
-- `footer`: The component rendered below the viewport.
-- `pagination`: The component rendered for the pagination feature.
+### Toolbar
 
-### Header
-
-You can replace the default toolbar by providing a `header` component.
+You can provide your own toolbar by passing it to the `Toolbar` component.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
