@@ -415,7 +415,7 @@ export const ServerSideSorting = () => {
   );
 
   // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
-  const sortBy: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
+  const sortModel: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
 
   return (
     <div className="grid-container">
@@ -425,7 +425,7 @@ export const ServerSideSorting = () => {
         onSortModelChange={onSortModelChange}
         sortingMode="server"
         disableMultipleColumnsSorting
-        sortModel={sortBy}
+        sortModel={sortModel}
         loading={loading}
       />
     </div>
@@ -461,6 +461,17 @@ export const ResetSortingRows = () => {
     <div className="grid-container" style={{ flexDirection: 'column' }}>
       <Button onClick={() => createRandomRows()}>Random Rows</Button>
       <XGrid rows={rows} columns={columns} sortModel={[{ field: 'team', sort: 'asc' }]} />
+    </div>
+  );
+};
+
+export const OriginalOrder = () => {
+  const idOnlyCols = [{ field: 'id' }];
+  const simpleRows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+
+  return (
+    <div className="grid-container" style={{ flexDirection: 'column' }}>
+      <XGrid rows={simpleRows} columns={idOnlyCols} />
     </div>
   );
 };
