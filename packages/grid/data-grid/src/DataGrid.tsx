@@ -36,25 +36,25 @@ export type DataGridProps = Omit<
 
 const MAX_PAGE_SIZE = 100;
 
-const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(props, ref) {
-  const { className, pageSize: pageSizeProp, ...other } = props;
+// const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(props, ref) {
+//   const { className, pageSize: pageSizeProp, ...other } = props;
 
-  let pageSize = pageSizeProp;
-  if (pageSize && pageSize > MAX_PAGE_SIZE) {
-    pageSize = MAX_PAGE_SIZE;
-  }
+//   let pageSize = pageSizeProp;
+//   if (pageSize && pageSize > MAX_PAGE_SIZE) {
+//     pageSize = MAX_PAGE_SIZE;
+//   }
 
-  return (
-    <GridComponent
-      ref={ref}
-      className={classnames('MuiDataGrid-root', className)}
-      pageSize={pageSize}
-      {...other}
-      {...FORCED_PROPS}
-      licenseStatus="Valid"
-    />
-  );
-});
+//   return (
+//     <GridComponent
+//       ref={ref}
+//       className={classnames('MuiDataGrid-root', className)}
+//       pageSize={pageSize}
+//       {...other}
+//       {...FORCED_PROPS}
+//       licenseStatus="Valid"
+//     />
+//   );
+// });
 
 // DataGrid2.propTypes = {
 //   apiRef: chainPropTypes(PropTypes.any, (props: any) => {
