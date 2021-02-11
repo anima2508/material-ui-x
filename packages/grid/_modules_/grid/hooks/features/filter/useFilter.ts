@@ -143,7 +143,8 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         const items = [...state.filter.items];
         const newItem = { ...item };
         const itemIndex = items.findIndex((filterItem) => filterItem.id === newItem.id);
-
+        const filterableColumns = filterableColumnsIds.filter(f => !items.some(i => i.columnField == f));
+        
         if (items.length === 1 && isDeepEqual(items[0], {})) {
           // we replace the first filter as it's empty
           items[0] = newItem;
@@ -158,7 +159,8 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         }
 
         if (newItem.columnField == null) {
-          newItem.columnField = filterableColumnsIds[0];
+          
+          newItem.columnField = filterableColumns[0];
         }
         if (newItem.columnField != null && newItem.operatorValue == null) {
           // we select a default operator
