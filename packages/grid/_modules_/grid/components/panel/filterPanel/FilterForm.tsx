@@ -5,6 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import { filterableColumnsSelector } from '../../../hooks/features/columns/columnsSelector';
+import { filterStateSelector } from '../../../hooks/features/filter/filterSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { ColDef } from '../../../models/colDef/colDef';
 import { FilterItem, LinkOperator } from '../../../models/filterItem';
@@ -66,6 +67,7 @@ export function FilterForm(props: FilterFormProps) {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
+  const filterState = useGridSelector(apiRef, filterStateSelector);
   const [currentColumn, setCurrentColumn] = React.useState<ColDef | null>(() => {
     if (!item.columnField) {
       return null;
@@ -82,7 +84,7 @@ export function FilterForm(props: FilterFormProps) {
       null
     );
   });
-
+  
   const changeColumn = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
       const columnField = event.target.value as string;
@@ -143,7 +145,7 @@ export function FilterForm(props: FilterFormProps) {
           <CloseIcon fontSize="small" />
         </IconButton>
       </FormControl>
-      <FormControl
+      {/* <FormControl
         className={classes.linkOperatorSelect}
         style={{
           display: hasMultipleFilters ? 'block' : 'none',
@@ -168,7 +170,7 @@ export function FilterForm(props: FilterFormProps) {
             {apiRef!.current.getLocaleText('filterPanelOperatorOr')}
           </option>
         </Select>
-      </FormControl>
+      </FormControl> */}
       <FormControl className={classes.columnSelect}>
         <InputLabel id="columns-filter-select-label">
           {apiRef!.current.getLocaleText('filterPanelColumns')}
@@ -180,14 +182,14 @@ export function FilterForm(props: FilterFormProps) {
           onChange={changeColumn}
           native
         >
-          {filterableColumns.map((col) => (
+          {filterableColumns.filter(f => item.columnField == f.field || !filterState.items.some(i => i.columnField == f.field)).map((col) => (
             <option key={col.field} value={col.field}>
               {col.headerName || col.field}
             </option>
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.operatorSelect}>
+      {/* <FormControl className={classes.operatorSelect}>
         <InputLabel id="columns-operators-select-label">
           {apiRef!.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
@@ -204,7 +206,7 @@ export function FilterForm(props: FilterFormProps) {
             </option>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
       <FormControl className={classes.filterValueInput}>
         {currentColumn &&
           currentOperator &&
