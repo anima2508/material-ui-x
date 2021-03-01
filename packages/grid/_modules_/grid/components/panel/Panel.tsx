@@ -17,6 +17,7 @@ const useStyles = makeStyles(
       backgroundColor: theme.palette.background.paper,
       minWidth: 300,
       maxHeight: 450,
+      marginTop: -50,
       display: 'flex',
     },
   }),
@@ -60,7 +61,7 @@ export function Panel(props: PanelProps) {
 
   return (
     <Popper
-      placement="bottom-start"
+      placement="bottom-end"
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}

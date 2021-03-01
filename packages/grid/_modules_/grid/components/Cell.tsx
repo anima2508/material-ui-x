@@ -65,7 +65,7 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
       }}
       tabIndex={tabIndex}
     >
-      {children || valueToRender?.toString()}
+      {children || (React.isValidElement(valueToRender) ? valueToRender : valueToRender?.toString())}
     </div>
   );
 });
