@@ -5,7 +5,7 @@ import { GridComponent, GridComponentProps, classnames } from '../../_modules_/g
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
-  disableColumnReorder: true,
+  disableColumnReorder: false,
   disableMultipleColumnsFiltering: false,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
