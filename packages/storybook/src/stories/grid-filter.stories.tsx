@@ -1,25 +1,25 @@
-import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
-import Button from '@material-ui/core/Button';
 import {
-  ColDef,
-  ColTypeDef,
-  FilterInputValueProps,
-  FilterModel,
-  FilterItem,
-  LinkOperator,
-  PreferencePanelsValue,
-  RowModel,
-  useApiRef,
+  GridColDef,
+  GridColTypeDef,
+  GridFilterInputValueProps,
+  GridFilterItem,
+  GridFilterModel,
+  GridFilterModelParams,
+  getGridNumericColumnOperators,
+  GridLinkOperator,
+  GridPreferencePanelsValue,
+  GridRowModel,
+  useGridApiRef,
   XGrid,
-  getNumericColumnOperators,
-  FilterModelParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import * as React from 'react';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -34,10 +34,6 @@ export default {
   },
 };
 
-// server filters
-// with new rows from apiRef
-// with new columns (partial and complete)
-
 export function CommodityWithOpenFilters() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
 
@@ -50,7 +46,7 @@ export function CommodityWithOpenFilters() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -68,13 +64,13 @@ export function CommodityWithOpenFiltersAndState() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
           filter: {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           },
         }}
       />
@@ -97,12 +93,12 @@ export function WithNewOperator() {
           columns={data.columns}
           filterModel={{
             items: [{ id: 123, columnField: 'commodity', value: 'co', operatorValue: operator }],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -131,12 +127,12 @@ export function CommodityWithNewRowsViaProps() {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -147,7 +143,7 @@ export function CommodityWithNewRowsViaProps() {
 export function CommodityWithNewColsViaProps() {
   const { data, setRowLength } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
-  const [cols, setCols] = React.useState<ColDef[]>([]);
+  const [cols, setCols] = React.useState<GridColDef[]>([]);
 
   React.useEffect(() => {
     setCols(data.columns);
@@ -179,7 +175,7 @@ export function CommodityWithNewColsViaProps() {
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -208,12 +204,12 @@ export function CommodityNoToolbar() {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -224,8 +220,8 @@ export function CommodityNoToolbar() {
 
 export function ServerFilterViaProps() {
   const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const [rows, setRows] = React.useState<RowModel[]>(demoServer.data.rows);
-  const [filterModel, setFilterModel] = React.useState<FilterModel>({
+  const [rows, setRows] = React.useState<GridRowModel[]>(demoServer.data.rows);
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }],
   });
   const [loading, setLoading] = React.useState(false);
@@ -250,7 +246,7 @@ export function ServerFilterViaProps() {
   // columnTypes={{string: {filterOperators: ['contains']}}}
 
   const onFilterChange = React.useCallback(
-    (params: FilterModelParams) => {
+    (params: GridFilterModelParams) => {
       const hasChanged = params.filterModel.items[0].value !== filterModel.items[0].value;
       setLoading(hasChanged);
       if (!hasChanged) {
@@ -281,7 +277,7 @@ export function ServerFilterViaProps() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -298,7 +294,7 @@ function getRowsFromServer(commodityFilterValue?: string) {
     { id: '5', commodity: 'oats' },
   ];
 
-  return new Promise<RowModel[]>((resolve) => {
+  return new Promise<GridRowModel[]>((resolve) => {
     setTimeout(() => {
       if (!commodityFilterValue) {
         resolve(serverRows);
@@ -310,8 +306,8 @@ function getRowsFromServer(commodityFilterValue?: string) {
   });
 }
 export function SimpleServerFilter() {
-  const [columns] = React.useState<ColDef[]>([{ field: 'commodity', width: 150 }]);
-  const [rows, setRows] = React.useState<RowModel[]>([]);
+  const [columns] = React.useState<GridColDef[]>([{ field: 'commodity', width: 150 }]);
+  const [rows, setRows] = React.useState<GridRowModel[]>([]);
   const [loading, setLoading] = React.useState(false);
 
   const fetchRows = React.useCallback(async (filterValue?: string) => {
@@ -322,7 +318,7 @@ export function SimpleServerFilter() {
   }, []);
 
   const onFilterChange = React.useCallback(
-    async (params: FilterModelParams) => {
+    async (params: GridFilterModelParams) => {
       await fetchRows(params.filterModel.items[0].value);
     },
     [fetchRows],
@@ -345,7 +341,7 @@ export function SimpleServerFilter() {
   );
 }
 export function CommodityWithNewRowsViaApi() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const apiDemoData = useDemoData({ dataSet: 'Commodity', rowLength: 150 });
 
@@ -371,12 +367,12 @@ export function CommodityWithNewRowsViaApi() {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -395,7 +391,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 
@@ -421,28 +417,38 @@ function RatingInputValue(props: FilterInputValueProps) {
 
 export function CustomFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
-  if (data.columns.length > 0) {
-    const ratingColumn = data.columns.find((col) => col.field === 'rating');
-    const ratingOperators = getNumericColumnOperators();
-    ratingColumn!.filterOperators = ratingOperators.map((operator) => {
-      operator.InputComponent = RatingInputValue;
-      return operator;
-    });
-  }
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      let newColumns: GridColDef[] = [...data.columns];
+      const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
+
+      const ratingOperators = getGridNumericColumnOperators();
+      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
+        operator.InputComponent = RatingInputValue;
+        return operator;
+      });
+
+      newColumns = newColumns.map((col) =>
+        col.field === 'rating' ? ratingColumn : col,
+      ) as GridColDef[];
+      setColumns(newColumns);
+    }
+  }, [data.columns]);
 
   return (
     <div className="grid-container">
       <XGrid
         rows={data.rows}
-        columns={data.columns}
+        columns={columns}
         filterModel={{
           items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
         }}
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -453,7 +459,7 @@ const RatingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -470,24 +476,32 @@ const RatingOnlyOperators = [
 
 export function RatingOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
-  if (data.columns.length > 0) {
-    const ratingColumn = data.columns.find((col) => col.field === 'rating');
-    ratingColumn!.filterOperators = RatingOnlyOperators;
-  }
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      let newColumns: GridColDef[] = [...data.columns];
+      const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
+      ratingColumn!.filterOperators = RatingOnlyOperators;
 
+      newColumns = newColumns.map((col) =>
+        col.field === 'rating' ? ratingColumn : col,
+      ) as GridColDef[];
+      setColumns(newColumns);
+    }
+  }, [data.columns]);
   return (
     <div className="grid-container">
       <XGrid
         rows={data.rows}
-        columns={data.columns}
+        columns={columns}
         filterModel={{
           items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
         }}
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -499,7 +513,7 @@ export function ColumnsAlign() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col: ColDef, idx) => {
+      cols.forEach((col: GridColDef, idx) => {
         if (idx > 1 && idx % 2 === 1 && idx < 5) {
           col.align = 'right';
           col.headerAlign = 'right';
@@ -511,7 +525,6 @@ export function ColumnsAlign() {
           col.align = 'left';
         }
         col.width = 180;
-        col.sortDirection = 'asc';
       });
     }
     return cols;
@@ -526,10 +539,10 @@ export function ColumnsAlign() {
   );
 }
 
-const priceColumnType: ColTypeDef = {
+const priceColumnType: GridColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,
-  filterOperators: getNumericColumnOperators()
+  filterOperators: getGridNumericColumnOperators()
     .filter((operator) => operator.value === '>' || operator.value === '<')
     .map((operator) => {
       return {
@@ -561,7 +574,17 @@ export function NewColumnTypes() {
 
   return (
     <div className="grid-container">
-      <DataGrid rows={data.rows} columns={cols} columnTypes={{ price: priceColumnType }} />
+      <DataGrid
+        rows={data.rows}
+        columns={cols}
+        columnTypes={{ price: priceColumnType }}
+        filterModel={{
+          items: [{ id: 1, columnField: 'totalPrice', operatorValue: '>', value: '1000000' }],
+        }}
+        state={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />
     </div>
   );
 }
@@ -572,34 +595,35 @@ const filterModel = {
 
 export function DemoCustomRatingFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
-      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+      let newColumns = [...data.columns];
+      const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
-      const ratingOperators = getNumericColumnOperators();
+      const ratingOperators = getGridNumericColumnOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;
       });
 
-      // Just hidding some columns for demo clarity
-      data.columns
-        .filter((col) => col.field === 'phone' || col.field === 'email' || col.field === 'username')
-        .forEach((col) => {
-          col.hide = true;
-        });
+      newColumns = newColumns.map((col) =>
+        col.field === 'rating' ? ratingColumn : col,
+      ) as GridColDef[];
+
+      setColumns(newColumns);
     }
   }, [data.columns]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={data.columns} filterModel={filterModel} />
+      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} />
     </div>
   );
 }
 
-const demoFilterModel: FilterModel = {
+const demoFilterModel: GridFilterModel = {
   items: [
     { id: 123, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { id: 12, columnField: 'quantity', operatorValue: '>=', value: '20000' },
@@ -615,7 +639,7 @@ export function DemoMultiFilteringGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid filterModel={demoFilterModel} {...data} />
+      <XGrid filterModel={demoFilterModel} {...data} checkboxSelection />
     </div>
   );
 }

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import {
-  FilterInputValueProps,
-  PreferencePanelsValue,
+  GridFilterInputValueProps,
+  GridPreferencePanelsValue,
   DataGrid,
-  FilterItem,
-  ColDef,
+  GridFilterItem,
+  GridColDef,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 
@@ -41,11 +41,11 @@ function RatingInputValue(props: FilterInputValueProps) {
   );
 }
 
-const RatingOnlyOperators = [
+const ratingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (
         !filterItem.columnField ||
         !filterItem.value ||
@@ -74,7 +74,7 @@ export default function CustomRatingOperator() {
     const ratingColumn = columns.find((col) => col.field === 'rating');
     const newRatingColumn = {
       ...ratingColumn!,
-      filterOperators: RatingOnlyOperators,
+      filterOperators: ratingOnlyOperators,
     };
     const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
     columns[ratingColIndex] = newRatingColumn;
@@ -91,7 +91,7 @@ export default function CustomRatingOperator() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />

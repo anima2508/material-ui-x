@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import {
   DataGrid,
-  FilterInputValueProps,
-  getNumericColumnOperators,
-  PreferencePanelsValue,
+  GridFilterInputValueProps,
+  getGridNumericColumnOperators,
+  GridPreferencePanelsValue,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 
@@ -52,10 +52,12 @@ export default function ExtendNumericOperator() {
     const ratingColumn = columns.find((column) => column.field === 'rating')!;
     const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
 
-    const ratingFilterOperators = getNumericColumnOperators().map((operator) => ({
-      ...operator,
-      InputComponent: RatingInputValue,
-    }));
+    const ratingFilterOperators = getGridNumericColumnOperators().map(
+      (operator) => ({
+        ...operator,
+        InputComponent: RatingInputValue,
+      }),
+    );
     columns[ratingColIndex] = {
       ...ratingColumn,
       filterOperators: ratingFilterOperators,
@@ -70,7 +72,7 @@ export default function ExtendNumericOperator() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />

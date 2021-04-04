@@ -9,13 +9,13 @@ components: DataGrid, XGrid
 
 ## Column definitions
 
-This section is an extension of the main [column definitions documentation](/components/data-grid/columns/#column-definitions) that focuses on the rendering and the customization of the rendering with `ColDef`.
+This section is an extension of the main [column definitions documentation](/components/data-grid/columns/#column-definitions) that focuses on the rendering and the customization of the rendering with `GridColDef`.
 
 ### Value getter
 
 Sometimes a column might not have a corresponding value and you just want to render a combination of different fields.
 
-To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below:
+To do that, you can set the `valueGetter` attribute of `GridColDef` as in the example below:
 
 **Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
@@ -26,7 +26,7 @@ function getFullName(params: ValueGetterParams) {
   }`;
 }
 
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
   { field: 'lastName', headerName: 'Last name', width: 130 },
   {
@@ -50,7 +50,7 @@ The value formatters allow you to format values for display as a string.
 For instance, you might want to format a JavaScript date object into a string year.
 
 ```tsx
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
@@ -78,11 +78,11 @@ The `renderCell` method of the column definitions is similar to `valueFormatter`
 However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
 
 ```tsx
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: ValueFormatterParams) => (
+    renderCell: (params: GridCellParams) => (
       <strong>
         {(params.value as Date).getFullYear()}
         <Button
@@ -101,18 +101,25 @@ const columns: ColDef[] = [
 
 {{"demo": "pages/components/data-grid/rendering/RenderCellGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
+#### Expand cell renderer
+
+By default, the grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
+As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the grid.
+
+{{"demo": "pages/components/data-grid/rendering/RenderExpandCellGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+
 ### Render header
 
 You can customize the look of each header with the `renderHeader` method.
 It takes precedence over the `headerName` property.
 
 ```tsx
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   {
     field: 'date',
     width: 150,
     type: 'date',
-    renderHeader: (params: ColParams) => (
+    renderHeader: (params: GridColumnHeaderParams) => (
       <strong>
         {'Birthday '}
         <span role="img" aria-label="enjoy">
@@ -128,13 +135,13 @@ const columns: ColDef[] = [
 
 ### Styling header
 
-The `ColDef` type has properties to apply class names and custom CSS on the header.
+The `GridColDef` type has properties to apply class names and custom CSS on the header.
 
 - `headerClassName`: to apply class names into the column header.
 - `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
 
 ```tsx
-const columns: Columns = [
+const columns: GridColumns = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',
@@ -152,13 +159,13 @@ const columns: Columns = [
 
 ### Styling cells
 
-The `ColDef` type has properties to apply class names and custom CSS on the cells.
+The `GridColDef` type has properties to apply class names and custom CSS on the cells.
 
 - `cellClassName`: to apply class names on every cell. It can also be a function.
-- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'.
+- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
 
 ```tsx
-const columns: Columns = [
+const columns: GridColumns = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
@@ -166,7 +173,7 @@ const columns: Columns = [
   {
     field: 'score',
     type: 'number',
-    cellClassName: (params: CellClassParams) =>
+    cellClassName: (params: GridCellClassParams) =>
       clsx('super-app', {
         negative: (params.value as number) < 0,
         positive: (params.value as number) > 0,
@@ -181,7 +188,7 @@ const columns: Columns = [
 
 By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.
 
-> ⚠️ When using % (**percentage**) for your height or width.<br> ><br>
+> ⚠️ When using % (**percentage**) for your height or width.
 > You need to make sure the container you are putting the grid into also has an intrinsic dimension.
 > The browsers fit the element according to a percentage of the parent dimension.
 > If the parent has no dimensions, then the % will be zero.
@@ -213,9 +220,11 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector you need to add the `showToolbar` prop to the data grid. The user can change the density of the data grid by using the density selector from the toolbar.
+To enable the density selector you need to compose a toolbar containing the `GridDensitySelector` component, and apply it using the `Toolbar` key in the grid `components` prop.
 
-{{"demo": "pages/components/data-grid/rendering/VisibleToolbarGrid.js", "bg": "inline"}}
+The user can change the density of the data grid by using the density selector from the toolbar.
+
+{{"demo": "pages/components/data-grid/rendering/DensitySelectorGrid.js", "bg": "inline"}}
 
 To hide the density selector add the `disableDensitySelector` prop to the data grid.
 
@@ -232,7 +241,7 @@ This is a built-in feature of the rendering engine and greatly improves renderin
 
 _unlimited\*: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
-### Row virtualization [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+### Row virtualization [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 Row virtualization is the insertion and removal of rows as the grid scrolls vertically.
 
@@ -261,8 +270,23 @@ The prop accepts an object of type [GridSlotsComponent](/api/data-grid/#slots) .
 
 ### Toolbar
 
-You can provide your own toolbar by passing it to the `Toolbar` component.
-This demo showcases how this can be achieve.
+To enable the toolbar you need to add the `Toolbar: GridToolbar` to the grid `components` prop.
+This demo showcases how this can be achieved.
+
+{{"demo": "pages/components/data-grid/rendering/ToolbarGrid.js", "bg": "inline"}}
+
+Alternatively, you can compose your own toolbar.
+
+```jsx
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridColumnsToolbarButton />
+      <GridFilterToolbarButton />
+    </GridToolbarContainer>
+  );
+}
+```
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
 

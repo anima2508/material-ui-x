@@ -7,7 +7,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, ValueGetterParams, GridToolbar } from '@material-ui/data-grid';
+import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
 import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -161,7 +161,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
-      it('should warn when CellParams.valueGetter is called with a missing column', () => {
+      it('should warn when GridCellParams.valueGetter is called with a missing column', () => {
         const rows = [
           { id: 1, age: 1 },
           { id: 2, age: 2 },
@@ -170,7 +170,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id', hide: true },
           {
             field: 'fullName',
-            valueGetter: (params: ValueGetterParams) => params.getValue('age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue('age'),
           },
         ];
         expect(() => {
@@ -475,7 +475,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            showToolbar
             components={{
               Toolbar: GridToolbar,
             }}

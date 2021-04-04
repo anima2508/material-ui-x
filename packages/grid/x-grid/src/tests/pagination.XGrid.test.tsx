@@ -5,7 +5,7 @@ import {
 } from 'test/utils';
 import * as React from 'react';
 import { expect } from 'chai';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
@@ -39,7 +39,7 @@ describe('<XGrid /> - Pagination', () => {
   it('should apply setPage correctly', () => {
     let apiRef;
     const GridTest = () => {
-      apiRef = useApiRef();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -53,7 +53,7 @@ describe('<XGrid /> - Pagination', () => {
     let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Nike');
     act(() => {
-      apiRef.current.setPage(2);
+      apiRef.current.setPage(1);
     });
 
     cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
-import { PreferencePanelsValue, DataGrid } from '@material-ui/data-grid';
+import { GridPreferencePanelsValue, DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 const useStyles = makeStyles({
@@ -46,7 +46,7 @@ RatingInputValue.propTypes = {
   }).isRequired,
 };
 
-const RatingOnlyOperators = [
+const ratingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
@@ -79,7 +79,7 @@ export default function CustomRatingOperator() {
     const ratingColumn = columns.find((col) => col.field === 'rating');
     const newRatingColumn = {
       ...ratingColumn,
-      filterOperators: RatingOnlyOperators,
+      filterOperators: ratingOnlyOperators,
     };
 
     const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
@@ -97,7 +97,7 @@ export default function CustomRatingOperator() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />

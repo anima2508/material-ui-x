@@ -1,19 +1,22 @@
-import { ColDef, RowId } from '@material-ui/x-grid';
+import { GridColDef, GridRowId } from '@material-ui/x-grid';
+import asyncWorker from '../asyncWorker';
 
 export interface DataRowModel {
-  id: RowId;
+  id: GridRowId;
   [field: string]: any;
 }
 
 export interface GridData {
-  columns: ColDef[];
+  columns: GridColDef[];
   rows: DataRowModel[];
 }
 
 export function getRealData(rowLength: number, columns: any[]): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
+    const tasks = { current: rowLength };
     const data: DataRowModel[] = [];
-    for (let i = 0; i < rowLength; i += 1) {
+
+    function work() {
       const row: any = {};
 
       for (let j = 0; j < columns.length; j += 1) {
@@ -22,8 +25,13 @@ export function getRealData(rowLength: number, columns: any[]): Promise<GridData
       }
 
       data.push(row);
+      tasks.current -= 1;
     }
 
-    resolve({ columns, rows: data });
+    asyncWorker({
+      work,
+      done: () => resolve({ columns, rows: data }),
+      tasks,
+    });
   });
 }

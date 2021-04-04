@@ -42,7 +42,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 
 #### Per column
 
-You can disable the filter on a column by setting the `filterable` property of the `ColDef` to `false`;
+You can disable the filter on a column by setting the `filterable` property of the `GridColDef` to `false`;
 
 ```js
 const columns = [{ field: 'image', filterable: false }];
@@ -111,16 +111,16 @@ The default operator that will be applied between filters is an And.
 To change the default operator, you should set the 'linkOperator' property of the filterModel like below.
 
 ```ts
-const filterModel: FilterModel = {
+const filterModel: GridFilterModel = {
   items: [
     { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { columnField: 'commodity', operatorValue: 'startsWith', value: 'Soy' },
   ],
-  linkOperator: LinkOperator.Or,
+  linkOperator: GridLinkOperator.Or,
 };
 ```
 
-{{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
 ### apiRef <span class="pro"></span>
 

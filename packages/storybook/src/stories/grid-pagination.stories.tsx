@@ -2,7 +2,13 @@ import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { ApiRef, useApiRef, XGrid, PageChangeParams, RowsProp } from '@material-ui/x-grid';
+import {
+  GridApiRef,
+  useGridApiRef,
+  XGrid,
+  GridPageChangeParams,
+  GridRowsProp,
+} from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';
@@ -18,7 +24,7 @@ export default {
 } as Meta;
 
 export function PaginationDefault() {
-  const data = useData(2000, 200);
+  const data = useData(200, 20);
 
   return (
     <div className="grid-container">
@@ -28,7 +34,7 @@ export function PaginationDefault() {
 }
 
 export function PageSize100() {
-  const data = useData(2000, 200);
+  const data = useData(2000, 20);
 
   return (
     <div className="grid-container">
@@ -38,14 +44,14 @@ export function PageSize100() {
 }
 
 export const PaginationArgs: Story = (args) => {
-  const data = useData(2000, 200);
+  const data = useData(200, 20);
 
   return <XGrid rows={data.rows} columns={data.columns} {...args} />;
 };
 PaginationArgs.args = {
   pagination: true,
   pageSize: 100,
-  page: 1,
+  page: 0,
   rowCount: 2000,
   autoPageSize: false,
   rowsPerPageOptions: [10, 20, 50, 100, 200],
@@ -55,7 +61,7 @@ PaginationArgs.args = {
 };
 
 export function HiddenPagination() {
-  const data = useData(2000, 200);
+  const data = useData(200, 20);
 
   return (
     <div className="grid-container">
@@ -71,16 +77,16 @@ export function HiddenPagination() {
 }
 
 export function PaginationApiTests() {
-  const apiRef: ApiRef = useApiRef();
+  const apiRef: GridApiRef = useGridApiRef();
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = React.useState(false);
 
   React.useEffect(() => {
-    return apiRef.current.onPageChange(action('pageChange'));
+    return apiRef.current.onPageChange(action('apiRef: onPageChange'));
   }, [apiRef, data]);
 
   const backToFirstPage = () => {
-    apiRef.current.setPage(1);
+    apiRef.current.setPage(0);
   };
   const [myPageSize, setPageSize] = React.useState(33);
   const changePageSizeWithOptionProp = () => {
@@ -126,13 +132,15 @@ export function PaginationApiTests() {
           pagination
           pageSize={myPageSize}
           autoPageSize={autosize}
+          onPageChange={action('prop: onPageChange')}
+          onPageSizeChange={action('prop: onPageSizeChange')}
           components={{
             Pagination: ({ state }) => (
               <Pagination
                 className="my-custom-pagination"
-                page={state.pagination.page}
+                page={state.pagination.page + 1}
                 count={state.pagination.pageCount}
-                onChange={(e, value) => apiRef.current.setPage(value)}
+                onChange={(e, value) => apiRef.current.setPage(value - 1)}
               />
             ),
           }}
@@ -173,12 +181,12 @@ export function AutoPagination() {
   );
 }
 
-function loadServerRows(params: PageChangeParams): Promise<GridData> {
+function loadServerRows(params: { page: number; pageSize: number }): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
     const data = getData(params.pageSize * 5, 10);
 
     setTimeout(() => {
-      const minId = (params.page - 1) * params.pageSize;
+      const minId = params.page * params.pageSize;
       data.rows.forEach((row) => {
         row.id = (Number(row.id) + minId).toString();
       });
@@ -188,26 +196,33 @@ function loadServerRows(params: PageChangeParams): Promise<GridData> {
 }
 
 export function ServerPaginationWithApi() {
-  const apiRef: ApiRef = useApiRef();
+  const apiRef: GridApiRef = useGridApiRef();
   const data = useData(1000, 10);
-  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const defaultPageSize = 50;
+
+  const loadRows = React.useCallback((params: { page: number; pageSize: number }) => {
+    setLoading(true);
+    loadServerRows(params).then((newData) => {
+      setRows(newData.rows);
+      setLoading(false);
+    });
+  }, []);
 
   React.useEffect(() => {
     const unsubscribe = apiRef.current.onPageChange((params) => {
       action('onPageChange')(params);
-      setLoading(true);
-      loadServerRows(params).then((newData) => {
-        setRows(newData.rows);
-        setLoading(false);
-      });
+      loadRows(params);
     });
+    loadRows({ page: 0, pageSize: defaultPageSize });
+
     return () => {
       if (unsubscribe) {
         unsubscribe();
       }
     };
-  }, [apiRef, data]);
+  }, [apiRef, data, loadRows]);
 
   return (
     <div className="grid-container">
@@ -216,7 +231,7 @@ export function ServerPaginationWithApi() {
         columns={data.columns}
         apiRef={apiRef}
         pagination
-        pageSize={50}
+        pageSize={defaultPageSize}
         rowCount={1000}
         paginationMode={'server'}
         loading={loading}
@@ -226,19 +241,31 @@ export function ServerPaginationWithApi() {
 }
 
 export function ServerPaginationWithEventHandler() {
-  const apiRef: ApiRef = useApiRef();
+  const apiRef: GridApiRef = useGridApiRef();
   const data = useData(100, 10);
-  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const defaultPageSize = 50;
 
-  const onPageChange = React.useCallback((params) => {
-    action('onPageChange')(params);
+  const loadRows = React.useCallback((params: { page: number; pageSize: number }) => {
     setLoading(true);
     loadServerRows(params).then((newData) => {
       setRows(newData.rows);
       setLoading(false);
     });
   }, []);
+
+  const onPageChange = React.useCallback(
+    (params) => {
+      action('onPageChange')(params);
+      loadRows(params);
+    },
+    [loadRows],
+  );
+
+  React.useEffect(() => {
+    loadRows({ page: 0, pageSize: defaultPageSize });
+  }, [apiRef, data, loadRows]);
 
   return (
     <div className="grid-container">
@@ -247,7 +274,7 @@ export function ServerPaginationWithEventHandler() {
         columns={data.columns}
         apiRef={apiRef}
         pagination
-        pageSize={50}
+        pageSize={defaultPageSize}
         rowCount={552}
         paginationMode={'server'}
         onPageChange={onPageChange}
@@ -266,6 +293,7 @@ export function Page1Prop() {
         columns={data.columns}
         pagination
         pageSize={50}
+        page={0}
         onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
@@ -281,7 +309,7 @@ export function Page2Prop() {
         columns={data.columns}
         pagination
         pageSize={50}
-        page={2}
+        page={1}
         onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
@@ -289,10 +317,10 @@ export function Page2Prop() {
 }
 export function Page2Api() {
   const data = useData(2000, 200);
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
 
   React.useEffect(() => {
-    apiRef.current.setPage(2);
+    apiRef.current.setPage(1);
   }, [apiRef]);
 
   return (
@@ -327,7 +355,7 @@ const gridTestRows = [
 const columns = [{ field: 'brand' }];
 
 export const GridTest = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   React.useEffect(() => {
     apiRef.current.setPage(2);
   }, [apiRef]);
@@ -347,7 +375,7 @@ export const GridTest = () => {
 function loadDocsDemoServerRows(page: number, data: any): Promise<any> {
   return new Promise<any>((resolve) => {
     setTimeout(() => {
-      resolve(data.rows.slice((page - 1) * 5, page * 5));
+      resolve(data.rows.slice(page * 5, (page + 1) * 5));
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
@@ -358,11 +386,11 @@ export function ServerPaginationDocsDemo() {
     rowLength: 100,
     maxColumns: 6,
   });
-  const [page, setPage] = React.useState(1);
-  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [page, setPage] = React.useState(0);
+  const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const handlePageChange = (params: PageChangeParams) => {
+  const handlePageChange = (params: GridPageChangeParams) => {
     setPage(params.page);
   };
 
@@ -398,6 +426,17 @@ export function ServerPaginationDocsDemo() {
         onPageChange={handlePageChange}
         loading={loading}
       />
+    </div>
+  );
+}
+export function CommodityAutoPageSizeSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 500,
+  });
+  return (
+    <div className="grid-container">
+      <DataGrid rows={data.rows} columns={data.columns} pagination autoPageSize />
     </div>
   );
 }

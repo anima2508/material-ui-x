@@ -1,22 +1,22 @@
 import * as React from 'react';
 import {
-  Columns,
-  RowsProp,
+  GridColumns,
+  GridRowsProp,
   DataGrid,
-  SortDirection,
-  ValueGetterParams,
+  GridSortDirection,
+  GridValueGetterParams,
 } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
 
-const columns: Columns = [
+const columns: GridColumns = [
   { field: 'name' },
   { field: 'age', type: 'number' },
   {
     field: 'username',
-    valueGetter: (params: ValueGetterParams) =>
+    valueGetter: (params: GridValueGetterParams) =>
       `${params.getValue('name') || 'unknown'} - ${params.getValue('age') || 'x'}`,
     sortComparator: (v1, v2, param1, param2) => param1.row.age - param2.row.age,
     width: 150,
@@ -25,7 +25,7 @@ const columns: Columns = [
   { field: 'lastLogin', type: 'dateTime', width: 180 },
 ];
 
-const rows: RowsProp = [
+const rows: GridRowsProp = [
   {
     id: 1,
     name: 'Damien',
@@ -73,7 +73,7 @@ const rows: RowsProp = [
 const sortModel = [
   {
     field: 'username',
-    sort: 'asc' as SortDirection,
+    sort: 'asc' as GridSortDirection,
   },
 ];
 

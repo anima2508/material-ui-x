@@ -3,6 +3,257 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.24](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
+
+_Apr 2, 2021_
+
+Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🇬🇷 Add elGR locale (#1275) @clytras
+- 🇪🇸 Add esES locale (#1286) @WiXSL
+- 🇯🇵 Add jaJP locale (#1283) @seed-of-apricot
+- 🇳🇱 Add nlNL locale (#1273) @wimdetroyer
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
+
+#### Breaking Changes
+
+- [DataGrid] All slot components no longer get access to `GridBaseComponentProps` through the props. To use the `GridBaseComponentProps` call the `useGridSlotComponentProps` hook. (#1252) @DanailH
+- [DataGrid] Type `GridSlotsComponent` changed (#1252) @DanailH
+- [DataGrid] Rename `GridBaseComponentProps` type to `GridSlotComponentProps` (#1252) @DanailH
+- [DataGrid] Rename `useGridBaseComponentProps` hook to `useGridSlotComponentProps` (#1252) @DanailH
+- [DataGrid] Rename modules (#1292) @DanailH
+- [DataGrid] Rename all events related to column reordering, e.g. `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
+- [DataGrid] Methods `onColItemDragStart`, `onColHeaderDragOver`, `onColItemDragOver`, `onColItemDragEnter` removed from the grid API. Prefer listening to [column reordering events](https://material-ui.com/components/data-grid/columns/#column-reorder) (#1299) @m4theushw
+- [DataGrid] Calling `apiRef.current.getColumnHeaderParams` returns a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] Events that follow the pattern `GRID_COLUMN_HEADER_xxx` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] The `renderHeader` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] The `apiRef.current.moveColumn` was renamed to `apiRef.current.setColumnIndex` (#1299) @m4theushw
+
+#### Changes
+
+- [DataGrid] Fix loader flag from useDemoData hook (#1279) @DanailH
+- [DataGrid] Fix page shift after toggling column (#1284) @m4theushw
+- [DataGrid] Fix rendering issues (#1319, #1253) @dtassone
+- [DataGrid] Refactor edit events to allow stop propagation (#1304) @dtassone
+
+### Core
+
+- [core] Batch small changes (#1310) @oliviertassinari
+
+## [4.0.0-alpha.23](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
+
+_Mar 22, 2021_
+
+Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `onRowsScrollEnd` to support infinite loading (#1199) @DanailH
+  This is an XGrid feature. Provides the ability to tap into the `onRowsScrollEnd` which is called when the scroll reaches the bottom of the grid viewport allowing developers to load additional data. It can be used with a combination of `scrollBottomThreshold` to control the area in which the `onRowsScrollEnd` is called.
+
+  See the documentation for [more details](https://material-ui.com/components/data-grid/rows/#infinite-loading).
+- 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
+- 🇵🇱 Added plPL locale (#1117) @LarsKumbier
+- ⚡️ Edit cell accessibility (#1205) @dtassone
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.23 / @material-ui/data-grid@v4.0.0-alpha.23
+
+- [DataGrid] Add plPL locale (#1274) @michallukowski
+- [DataGrid] Add onRowsScrollEnd to support infinite loading (#1199) @DanailH
+- [DataGrid] Edit Cell Navigation (#1205) @dtassone
+- [DataGrid] Fix Popper z-index (#1240) @m4theushw
+- [DataGrid] Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
+
+### Docs
+
+- [docs] Lazy generate fake data (#1170) @oliviertassinari
+- [docs] Fix linking to sorting component in data-grid overview page (#1237) @SaskiaKeil
+- [docs] Fix typos (#1198) @cthogg
+
+### Core
+
+- [core] Improve the handling of events (rm capture, add event, add new props) (#1158) @dtassone
+- [core] Reinforce that columns are definitions (#1210) @oliviertassinari
+- [core] Batch small changes (#1209) @oliviertassinari
+- [core] No top-level imports (#1257) @oliviertassinari
+- [core] Remove dead code (#1259) @oliviertassinari
+
+## [4.0.0-alpha.22](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.21...v4.0.0-alpha.22)
+
+_Mar 9, 2021_
+
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Implement base foundation for editing a cell (#1025) @dtassone.
+  This is the foundation on which the feature will be built. Currently, the newly added methods aren't yet ready for being used. This feature will be available in the coming weeks.
+- 🇩🇪 Added deDE locale (#1117) @LarsKumbier
+- 📜 Fix scrollbar related issue (#1146) @dtassone
+- 🐛 Handle commas in cell values when doing CSV export (#1154) @DanailH
+
+### @material-ui/x-grid@v4.0.0-alpha.22 / @material-ui/data-grid@v4.0.0-alpha.22
+
+- [DataGrid] Add deDE locale (#1117) @LarsKumbier
+- [DataGrid] Fix scrollbar on autopageSize (#1146) @dtassone
+- [DataGrid] Fix handling of special chars when doing CSV export (#1154) @DanailH
+- [DataGrid] Implement base foundation for editing a cell (#1025) @dtassone
+- [DataGrid] Improve edit cell UI (#1168) @oliviertassinari
+
+### Docs
+
+- [docs] Add demo page (#1147) @DanailH
+- [docs] Fix typo in localization.md (#1155) @michael-martin-al
+- [docs] Improve the desciption of the individual packages (#1139) @oliviertassinari
+- [docs] Fix rendering docs to solve custom pagination issue (#1159) @consDev
+
+### Core
+
+- [core] Add build in eslintignore (#1171) @dtassone
+- [core] Increase timeout for XGrid demo (#1150) @oliviertassinari
+- [core] Output warnings in the rendered components (#1153) @oliviertassinari
+- [core] Update to the HEAD of the monorepo (#1138) @oliviertassinari
+
+## [4.0.0-alpha.21](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.20...v4.0.0-alpha.21)
+
+_Feb 27, 2021_
+
+Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for CSV export (#1030) @DanailH.
+  This is the first iteration of the feature. You can either render the `GridToolbarExport` component in the toolbar or use the apiRef `exportDataAsCsv`/`getDataAsCsv` methods.
+
+  See the documentation for [more details](https://material-ui.com/components/data-grid/export/#csv-export).
+- 🌏 Improve the support for custom locales (#1096, #1079, #1109, #1077)
+- ♿️ Fix a couple of accessibility issues with the popups (#1105, #1102)
+
+### @material-ui/x-grid@v4.0.0-alpha.21 / @material-ui/data-grid@v4.0.0-alpha.21
+
+#### Breaking changes
+
+- [DataGrid] Prefix all public API to fit into the global Material-UI namespace (#1069) @DanailH
+  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material-UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
+
+  For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui-org/material-ui-x/pull/1069).
+
+#### Changes
+
+- [DataGrid] Add frFR locale (#1079) @oliviertassinari
+- [DataGrid] Add missing TablePagination localizations (#1109) @DanailH
+- [DataGrid] Add ptBR locale (#1077) @erikian
+- [DataGrid] Fix checked checkbox when empty rows (#1068) @bigandy
+- [DataGrid] Fix issue with visible rows state (#1113) @dtassone
+- [DataGrid] Fix last row (#1071) @dtassone
+- [DataGrid] Fix menu accessible (#1105) @DanailH
+- [DataGrid] Fix missing translation filterOperatorAfter key (#1096) @DanailH
+- [DataGrid] Fix preferences panel accessibility (#1102) @DanailH
+- [DataGrid] Implement CSV export (#1030) @DanailH
+
+### Docs
+
+- [docs] Add expand cell renderer demo (#1070) @dtassone
+- [docs] Clarify align is separate from headerAlign (#1074) @alexdanilowicz
+- [docs] Clarify product split (#1080) @oliviertassinari
+
+### Core
+
+- [core] Fix storybook pagination stories (#1099) @dtassone
+- [core] Pin playwright image to known working version (#1110) @oliviertassinari
+- [test] Add visual regression tests (#1081) @oliviertassinari
+- [test] Avoid Rate Limit Exceeded (#1059) @oliviertassinari
+- [test] Fix containers size for screenshots (#1111) @oliviertassinari
+- [test] Fix visual regression flakiness (#1115) @oliviertassinari
+- [test] Improve BrowserStack configuration (#1100) @oliviertassinari
+- [test] Speed-up rebuild in Karma (#1064) @oliviertassinari
+
+## [4.0.0-alpha.20](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
+
+_Feb 17, 2021_
+
+Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 📍 Add support for default locales (#983) @DanailH
+  We have built the infrastructure to support around 100 [default locales](https://material-ui.com/components/data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material-UI by opening a pull request.
+- 🎁 Add new `selectionModel` prop (#986) @dtassone
+  The prop can be used to control the selected rows in the data grid. [See the docs](https://material-ui.com/components/data-grid/selection/#controlled-selection).
+- 💅 Add support for default props from theme (#1019) @DanailH
+- 🙌 Fix scrollbar size on windows (#1061) @dtassone
+- 🐛 Polish existing features, fix 9 issues.
+
+### @material-ui/x-grid@v4.0.0-alpha.20 / @material-ui/data-grid@v4.0.0-alpha.20
+
+#### Breaking changes
+
+- [DataGrid] Remove `sortDirection` from column definitions. Consolidate around fewer ways of doing the same thing. (#1015) @dtassone
+
+  ```diff
+  -columns[1] = { ...columns[1], sortDirection: 'asc' };
+
+  return (
+    <div>
+  -   <DataGrid rows={rows} columns={columns} />
+  +   <DataGrid rows={rows} columns={columns} sortModel={[{ field: columns[1].field, sort: 'asc' }]} />
+    </div>
+  ```
+
+- [DataGrid] Rename the `onSelectionChange` prop to `onSelectionModelChange` for consistency. (#986) @dtassone
+
+  ```diff
+  -<DataGrid onSelectionChange={selectionChangeHandler} />
+  +<DataGrid onSelectionModelChange={onSelectionModelChangeHandler} />
+  ```
+
+- [DataGrid] Remove `showToolbar` prop (#948) @DanailH
+
+  ```diff
+  -import { DataGrid } from '@material-ui/data-grid';
+  +import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+
+  -<DataGrid showToolbar />
+  +<DataGrid components={{ Toolbar: GridToolbar }} />
+  ```
+
+- [DataGrid] Change page index base, from 1 to 0. (#1021) @dtassone
+  This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material-UI still uses a 1-base page for the `Pagination` component that matches the URL's query.
+
+  ```diff
+  -const [page, setPage] = React.useState(1);
+  +const [page, setPage] = React.useState(0);
+
+  return (
+    <div className="grid-container">
+      <DataGrid rows={rows} columns={columns} page={page} />
+    </div>
+  ```
+
+#### Changes
+
+- [DataGrid] Add bgBG locale (#983) @DanailH
+- [DataGrid] Add last of the missing translations (#1033) @DanailH
+- [DataGrid] Add support for default props from theme (#1019) @DanailH
+- [DataGrid] Fix controllable filters and select all rows with filters (#1020) @dtassone
+- [DataGrid] Fix onPageChange and onPageSizeChange event trigger (#1034) @dtassone
+- [DataGrid] Fix process is not defined (EXPERIMENTAL_ENABLED) (#1027) @leontastic
+- [DataGrid] Fix scrollbar size on windows (#1061) @dtassone
+- [DataGrid] Fix warning with v5 (#1038) @oliviertassinari
+- [DataGrid] Resolve the api ref at the same time as any other ref (#990) @oliviertassinari
+- [DataGrid] Use the disableDensitySelector to disable the DensitySelector (#1031) @DanailH
+- [DataGrid] Fix passing [] or undefined in sortModel prop (#1035) @dtassone
+- [XGrid] Fix server-side multi filters (#1029) @dtassone
+
+### Docs
+
+- [docs] Add code snippet for localization docs in the data grid (#1024) @DanailH
+- [docs] Fix usage of the wrong type (#1062) @oliviertassinari
+- [docs] Reduce fears around license upfront @oliviertassinari
+- [docs] Update streaming docs (#1013) @dtassone
+
+### Core
+
+- [core] Batch small changes (#991) @oliviertassinari
+- [core] Save/restore actual yarn cache folder (#1039) @oliviertassinari
+- [test] Increase yarn timeout (#1023) @oliviertassinari
+- [test] Link CircleCI URL in BS (#1060) @oliviertassinari
+
 ## [4.0.0-alpha.19](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
 
 ###### _Feb 5, 2021_

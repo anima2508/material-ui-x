@@ -6,13 +6,13 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
 } from 'test/utils';
-import { getColumnHeaders } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
+} from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
 
 describe('<DataGrid /> - Toolbar', () => {
   // TODO v5: replace with createClientRender
@@ -57,7 +57,6 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            showToolbar
             components={{
               Toolbar: GridToolbar,
             }}
@@ -81,7 +80,6 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            showToolbar
             components={{
               Toolbar: GridToolbar,
             }}
@@ -137,17 +135,16 @@ describe('<DataGrid /> - Toolbar', () => {
             components={{
               Toolbar: GridToolbar,
             }}
-            showToolbar
           />
         </div>,
       );
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
 
-      expect(getColumnHeaders()).to.deep.equal(['brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
     it('should hide all columns when clicking "HIDE ALL" from the column selector', () => {
@@ -158,17 +155,16 @@ describe('<DataGrid /> - Toolbar', () => {
             components={{
               Toolbar: GridToolbar,
             }}
-            showToolbar
           />
         </div>,
       );
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Hide All'));
+      fireEvent.click(getByText('Hide all'));
 
-      expect(getColumnHeaders()).to.deep.equal([]);
+      expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
     it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
@@ -191,15 +187,38 @@ describe('<DataGrid /> - Toolbar', () => {
             components={{
               Toolbar: GridToolbar,
             }}
-            showToolbar
           />
         </div>,
       );
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Show All'));
+      fireEvent.click(getByText('Show all'));
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+    });
+
+    it('should keep the focus on the switch after toggling a column', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </div>,
+      );
+
+      const button = screen.getByRole('button', { name: 'Select columns' });
+      button.focus();
+      fireEvent.click(button);
+
+      const column: HTMLElement | null = document.querySelector('[role="tooltip"] [name="id"]');
+      column!.focus();
+      fireEvent.click(column);
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(column).toHaveFocus();
     });
   });
 });

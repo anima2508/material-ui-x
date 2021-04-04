@@ -9,12 +9,17 @@ LicenseInfo.setLicenseKey(
 );
 
 configureActions({
-  depth: 3,
+  depth: 6,
   limit: 10,
 });
 
 export const parameters = {
-  actions: { argTypesRegex: '^on.*' },
+  // The storybook action panel is throwing a serialisation error with mouse events
+  // due to its circular structure
+  actions: {
+    argTypesRegex:
+      '^on((?!CellBlur|CellClick|CellDoubleClick|CellEditBlur|CellKeyDown|CellEnter|CellLeave|CellMouseDown|CellOut|CellOver|ColumnHeaderClick|ColumnHeaderDoubleClick|ColumnHeaderOver|ColumnHeaderOut|ColumnHeaderEnter|ColumnHeaderLeave|StateChange|RowClick|RowDoubleClick|RowEnter|RowLeave|RowOut|RowOver).)*$',
+  },
   options: {
     /**
      * display the top-level grouping as a "root" in the sidebar
