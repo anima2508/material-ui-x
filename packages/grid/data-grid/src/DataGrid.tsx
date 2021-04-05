@@ -4,8 +4,8 @@ import { chainPropTypes } from '@material-ui/utils';
 import { GridComponent, GridComponentProps, classnames, useThemeProps } from '../../_modules_/grid';
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
-  disableColumnResize: true,
-  disableColumnReorder: false,
+  disableColumnResize: false,
+  disableColumnReorder: true,
   disableMultipleColumnsFiltering: false,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,

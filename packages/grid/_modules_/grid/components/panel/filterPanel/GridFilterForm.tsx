@@ -6,6 +6,7 @@ import Select from '@material-ui/core/Select';
 import { capitalize } from '@material-ui/core/utils';
 import { makeStyles } from '@material-ui/core/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { filterGridStateSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
@@ -68,6 +69,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+  const filterState = useGridSelector(apiRef, filterGridStateSelector);
   const [currentColumn, setCurrentColumn] = React.useState<GridColDef | null>(() => {
     if (!item.columnField) {
       return null;
@@ -189,7 +191,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      {/* <FormControl className={classes.operatorSelect}>
+      <FormControl className={classes.operatorSelect}>
         <InputLabel id="columns-operators-select-label">
           {apiRef!.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
@@ -209,7 +211,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
             </option>
           ))}
         </Select>
-      </FormControl> */}
+      </FormControl>
       <FormControl className={classes.filterValueInput}>
         {currentColumn &&
           currentOperator &&

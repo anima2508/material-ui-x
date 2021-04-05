@@ -153,7 +153,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       tabIndex={hasFocus ? 0 : -1}
       {...eventsHandlers}
     >
-      {children || valueToRender?.toString()}
+      {children || (React.isValidElement(valueToRender) ? valueToRender : valueToRender?.toString())}
     </div>
   );
 });
