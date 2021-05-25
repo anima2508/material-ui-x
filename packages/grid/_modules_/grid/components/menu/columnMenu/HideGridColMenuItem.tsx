@@ -13,6 +13,7 @@ export const HideGridColMenuItem: React.FC<GridFilterItemProps> = ({ column, onC
       // time for the transition
       timeoutRef.current = setTimeout(() => {
         apiRef!.current.toggleColumn(column?.field, true);
+        apiRef!.current.forceUpdateColumnsWidth();
       }, 10);
     },
     [apiRef, column?.field, onClick],

@@ -47,6 +47,7 @@ export function GridColumnsPanel() {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const { name } = event.target as HTMLInputElement;
       apiRef!.current.toggleColumn(name);
+      apiRef!.current.forceUpdateColumnsWidth();
     },
     [apiRef],
   );
@@ -59,6 +60,7 @@ export function GridColumnsPanel() {
           return col;
         }),
       );
+      apiRef!.current.forceUpdateColumnsWidth();
     },
     [apiRef, columns],
   );

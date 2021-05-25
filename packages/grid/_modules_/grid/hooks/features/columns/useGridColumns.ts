@@ -161,9 +161,22 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
       const col = getColumnFromField(field);
       const updatedCol = { ...col, hide: hide == null ? !col.hide : hide };
       updateColumns([updatedCol]);
+
       forceUpdate();
     },
     [forceUpdate, getColumnFromField, updateColumns],
+  );
+
+  const forceUpdateColumnsWidth = React.useCallback(
+    () => {
+      //force updateColumnsWidth after toggle
+      const currentColumns = allGridColumnsSelector(apiRef.current.getState());
+      const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
+      updateColumns(updatedCols);
+
+      forceUpdate();
+    },
+    [updateColumns],
   );
 
   const setColumnIndex = React.useCallback(
@@ -203,6 +216,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     updateColumns,
     toggleColumn,
     setColumnIndex,
+    forceUpdateColumnsWidth,
   };
 
   useGridApiMethod(apiRef, colApi, 'ColApi');

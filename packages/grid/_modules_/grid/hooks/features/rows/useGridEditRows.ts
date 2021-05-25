@@ -278,6 +278,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
         apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
+        return;
         const commitParams: GridEditCellPropsParams = apiRef.current.getEditCellPropsParams(
           params.id,
           params.field,

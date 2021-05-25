@@ -58,4 +58,6 @@ export interface GridColumnApi {
    * @param targetIndexPosition .
    */
   setColumnIndex: (field: string, targetIndexPosition: number) => void;
+
+  forceUpdateColumnsWidth: () => void;
 }
